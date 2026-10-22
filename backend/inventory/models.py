@@ -35,6 +35,30 @@ class InventoryItem(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
+class AssemblyStatusOption(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="assembly_status_options",
+    )
+    name = models.CharField(max_length=200)
+    position = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class PaintingStatusOption(models.Model):
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="painting_status_options",
+    )
+    name = models.CharField(max_length=200)
+    position = models.PositiveIntegerField()
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
 class MiniatureDetails(models.Model):
     inventory_item = models.OneToOneField(
         InventoryItem,
@@ -46,6 +70,20 @@ class MiniatureDetails(models.Model):
     unit_name = models.CharField(max_length=200, blank=True)
     models_per_unit = models.PositiveIntegerField(
         default=1, validators=[MinValueValidator(1)]
+    )
+    assembly_status = models.ForeignKey(
+        AssemblyStatusOption,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="miniatures",
+    )
+    painting_status = models.ForeignKey(
+        PaintingStatusOption,
+        on_delete=models.PROTECT,
+        null=True,
+        blank=True,
+        related_name="miniatures",
     )
 
     class Meta:
